@@ -13,7 +13,7 @@ SECRET_KEY = "django-insecure-p%ji0!$6x+b$k84e2gd76vk7y*f74u*^v9gq=fv%k!+z_-%+dt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["localhost", "*"]
+ALLOWED_HOSTS = [ "localhost", "https://abramovichanna.github.io/" ]
 
 AUTH_USER_MODEL = "smartcube_api.ShopUser"
 
@@ -46,7 +46,6 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://abramovichanna.github.io",
-    "http://127.0.0.1:5500",
     "http://127.0.0.1:3000",
     "http://localhost:3000",
 ]
