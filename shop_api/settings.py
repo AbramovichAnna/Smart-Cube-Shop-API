@@ -46,6 +46,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://abramovichanna.github.io",
+    "https://shop-api-763v.onrender.com",
+    "https://shop-app-ka0g.onrender.com",
     "http://127.0.0.1:3000",
     "http://localhost:3000",
 ]
