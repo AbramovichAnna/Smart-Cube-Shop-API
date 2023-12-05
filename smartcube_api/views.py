@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from .serializers import ShopUserSerializer, ProductSerializer, GiftCardSerializer, CartSerializer, CategorySerializer, CartItemSerializer, BrandSerializer, TypeSerializer, CartSerializer
 from rest_framework import status
 from rest_framework.parsers import JSONParser
+from django.contrib import messages
 
 def index(request):
     return HttpResponse("""<h1>SpeedCube shop API</h1>
@@ -259,27 +260,17 @@ def login(request):
         return Response(serializer.erros, status=400)
     
 
-# USER LOGOUT
-@api_view(['GET', 'POST'])
-def logout(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = ShopUserSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.erros, status=400)
-    
 
 # USER REGISTER
-@api_view(['GET', 'POST'])
+@api_view(['POST'])
 def register(request):
     if request.method == 'POST':
         data = JSONParser().parse(request)
         serializer = ShopUserSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.erros, status=400)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"message": "This method is not allowed"}, status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     

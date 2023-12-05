@@ -6,7 +6,7 @@ from .models import ShopUser, Product, Category, Type, Brand, Cart, CartItem, Or
 class ShopUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ShopUser
-        fields = ['id', 'username']
+        fields = ['id', 'username', 'email']
 
 
 #PRODUCT-DETAILS

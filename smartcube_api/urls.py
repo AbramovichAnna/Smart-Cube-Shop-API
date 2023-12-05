@@ -22,7 +22,6 @@ urlpatterns = [
     path("giftcards/", views.giftcards, name="giftcards"),
     path("giftcard/<int:pk>", views.giftcard, name="giftcard"),
     path("login/", views.login, name="login"),
-    path("logout/", views.logout, name="logout"),
     path("register/", views.register, name="register"),
     path("users/", views.users, name="users"),
     path("user/<int:user_id>", views.user, name="user"),
