@@ -55,6 +55,7 @@ class Brand(models.Model):
 class Cart(models.Model):
     user = models.ForeignKey(ShopUser, on_delete=models.CASCADE)
     date = models.DateField(auto_now_add=True)
+    isPaid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username

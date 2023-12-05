@@ -13,7 +13,7 @@ SECRET_KEY = "django-insecure-p%ji0!$6x+b$k84e2gd76vk7y*f74u*^v9gq=fv%k!+z_-%+dt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ "127.0.0.1", "localhost", "abramovichanna.github.io", "shop-api-763v.onrender.com" ]
+ALLOWED_HOSTS = [ "127.0.0.1", "localhost", "abramovichanna.github.io", "shop-api-763v.onrender.com", "shop-app-ka0g.onrender.com" ]
 
 AUTH_USER_MODEL = "smartcube_api.ShopUser"
 

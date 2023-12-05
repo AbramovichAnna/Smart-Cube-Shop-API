@@ -215,16 +215,9 @@ def add_to_cart(request):
             return Response(serializer.data, status=201)
         return Response(serializer.erros, status=400)
 
+
 # REMOVE FROM CART
-@api_view(['GET', 'POST'])
-def remove_from_cart(request):
-    if request.method == 'POST':
-        data = JSONParser().parse(request)
-        serializer = CartItemSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=201)
-        return Response(serializer.erros, status=400)
+
     
 # USER
 @api_view(['GET', 'PUT', 'DELETE'])
