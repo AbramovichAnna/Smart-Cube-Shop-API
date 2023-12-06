@@ -2,7 +2,7 @@ from rest_framework import serializers
 from .models import ShopUser, Product, Category, Type, Brand, Cart, CartItem, GiftCard
 
 
-# USER
+
 class ShopUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
 
@@ -41,17 +41,12 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = '__all__'
 
-
-
-
-
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     class Meta:
         model = CartItem
         fields = ['id', 'product', 'quantity']
 
-# CART
 class CartSerializer(serializers.ModelSerializer):
     products = CartItemSerializer(source='cartitem_set', many=True)
     class Meta:
