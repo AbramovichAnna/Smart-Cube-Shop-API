@@ -55,6 +55,7 @@ class Brand(models.Model):
 #CART
 class Cart(models.Model):
     user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, related_name='cart', null=True)
+    products = models.ManyToManyField(Product, through='CartItem')
     ctreate_at = models.DateField(auto_now_add=True)
     # isPaid = models.BooleanField(default=False)
 
@@ -68,8 +69,7 @@ class CartItem(models.Model):
     quantity = models.IntegerField(default=1)
 
     def __str__(self):
-        return f"{self.quantity} x {self.product.title} in Cart ({self.user.username} cart = {self.cart})"
-    
+        return f"{self.quantity} of {self.product.name}"
 
 #GIFTCARD
 class GiftCard(models.Model):

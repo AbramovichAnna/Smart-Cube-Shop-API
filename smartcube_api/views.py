@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from .models import ShopUser, Product, Category, CartItem, Brand, Type, GiftCard, Cart
 from rest_framework.decorators import api_view
@@ -214,3 +214,29 @@ def register(request):
     else:
         return Response("Method not allowed", status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
+    
+# ADD TO CART
+@api_view(['POST'])
+def add_to_cart(request):
+    # Get the current user
+    user = get_object_or_404(ShopUser, pk=request.user.pk)
+
+    # Get product_id from request data
+    product_id = request.data.get('product_id')
+    product = get_object_or_404(Product, pk=product_id)
+
+    # Get or create the cart for the user
+    cart, created = Cart.objects.get_or_create(user=user)
+
+    # Get or create a cart item for the specified product
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    if not created:
+        # If the item already exists, increment the quantity
+        cart_item.quantity += 1
+        cart_item.save()
+
+    # Serialize the cart data
+    serializer = CartSerializer(cart)
+
+    # Return the serialized cart data
+    return Response(serializer.data, status=status.HTTP_200_OK)

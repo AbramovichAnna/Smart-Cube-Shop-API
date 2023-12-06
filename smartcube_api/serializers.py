@@ -14,7 +14,6 @@ class ShopUserSerializer(serializers.ModelSerializer):
         user = ShopUser.objects.create_user(**validated_data)
         return user
 
-# PRODUCT DETAILS
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
@@ -43,19 +42,21 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# CART
-class CartSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Cart
-        fields = '__all__'
+
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
     class Meta:
         model = CartItem
-        fields = '__all__'
+        fields = ['id', 'product', 'quantity']
 
-
+# CART
+class CartSerializer(serializers.ModelSerializer):
+    products = CartItemSerializer(source='cartitem_set', many=True)
+    class Meta:
+        model = Cart
+        fields = ['id', 'products']
 class GiftCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = GiftCard
