@@ -54,7 +54,7 @@ class Brand(models.Model):
     
 #CART
 class Cart(models.Model):
-    date = models.DateField(auto_now_add=True)
+    ctreate_at = models.DateField(auto_now_add=True)
     # isPaid = models.BooleanField(default=False)
 
     def __str__(self):
@@ -62,7 +62,6 @@ class Cart(models.Model):
     
 #CARTITEM
 class CartItem(models.Model):
-    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE , null=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)

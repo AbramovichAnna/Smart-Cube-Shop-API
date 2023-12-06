@@ -193,23 +193,24 @@ def cart_items(request):
         cart_items = CartItem.objects.all()
         serializer = CartItemSerializer(cart_items, many=True)
         return Response(serializer.data)
-    
     elif request.method == 'POST':
         serializer = CartItemSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    
 
 # USER REGISTER
 @api_view(['POST'])
 def register(request):
     if request.method == 'POST':
-            serializer = ShopUserSerializer(data=request.data)
-            if serializer.is_valid():
-                serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer = ShopUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response("Method not allowed", status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
