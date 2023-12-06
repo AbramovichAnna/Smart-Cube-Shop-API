@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import ShopUser, Product, Category, Type, Brand, Cart, CartItem, GiftCard
+from django.contrib.auth.hashers import make_password
 
 
 #USER
@@ -8,12 +9,11 @@ class ShopUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShopUser
-        fields = ['id', 'username', 'password', 'age', 'city']
+        fields = ['id', 'username', 'password', 'email'] # Add 'email' to fields
 
     def create(self, validated_data):
-        user = ShopUser.objects.create_user(**validated_data)
-        return user
-
+        validated_data['password'] = make_password(validated_data.get('password'))
+        return super(ShopUserSerializer, self).create(validated_data)
 
 #PRODUCT-DETAILS
 class CategorySerializer(serializers.ModelSerializer):
