@@ -4,9 +4,15 @@ from .models import ShopUser, Product, Category, Type, Brand, Cart, CartItem, Gi
 
 #USER
 class ShopUserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
     class Meta:
         model = ShopUser
-        fields = ['id', 'username']
+        fields = ['id', 'username', 'password', 'age', 'city']
+
+    def create(self, validated_data):
+        user = ShopUser.objects.create_user(**validated_data)
+        return user
 
 
 #PRODUCT-DETAILS
