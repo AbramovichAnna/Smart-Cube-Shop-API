@@ -54,11 +54,12 @@ class Brand(models.Model):
     
 #CART
 class Cart(models.Model):
+    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, related_name='cart', null=True)
     ctreate_at = models.DateField(auto_now_add=True)
     # isPaid = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Cart {self.id}"
+        return f"{self.user.username} cart"
     
 #CARTITEM
 class CartItem(models.Model):
