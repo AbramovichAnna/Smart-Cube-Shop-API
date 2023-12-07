@@ -55,7 +55,7 @@ def products(request):
         return Response(serializer.errors, status=400)
     
 
-    # PRODUCT DETAILS
+# PRODUCT DETAILS
 @api_view(['GET', 'PUT', 'DELETE'])
 def product_details(request, pk):
     try:
@@ -134,6 +134,63 @@ def brand(request, pk):
         serializer = BrandSerializer(brand)
         return Response(serializer.data)
 
+# CATEGORIES
+@api_view()
+def categories(request):
+    all_categories = CategorySerializer(Category.objects.all(), many=True).data
+    return Response(all_categories)
+
+    
+# CATEGORY
+@api_view(['GET'])
+def category(request, pk):
+    try:
+        category = Category.objects.get(pk=pk)
+    except Category.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    serializer = CategorySerializer(category)
+    return Response(serializer.data)
+
+
+# TYPES
+@api_view()
+def types(request):
+    if request.method == 'GET':
+        types = Type.objects.all()
+        serializer = TypeSerializer(types, many=True)
+        return Response(serializer.data)
+    
+# TYPE
+@api_view()
+def type(request, pk):
+    try:
+        type = Type.objects.get(pk=pk)
+    except Type.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = TypeSerializer(type)
+        return Response(serializer.data)
+
+# BRANDS
+@api_view()
+def brands(request):
+    all_brands = BrandSerializer(Brand.objects.all(), many=True).data
+    return Response(all_brands)
+
+# BRAND
+@api_view()
+def brand(request, pk):
+    try:
+        brand = Brand.objects.get(pk=pk)
+    except Brand.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    if request.method == 'GET':
+        serializer = BrandSerializer(brand)
+        return Response(serializer.data)
+
 # GIFTCARDS
 @api_view(['GET', 'POST'])
 def giftcards(request):
@@ -146,7 +203,7 @@ def giftcards(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)
-        return Response(serializer.erros, status=400)
+        return Response(serializer.errors, status=400)
     
 # GIFTCARD
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -160,11 +217,11 @@ def giftcard(request, pk):
         serializer = GiftCardSerializer(giftcard)
         return Response(serializer.data)
     elif request.method == 'PUT':
-        serializer = GiftCardSerializer(data=request.data)
+        serializer = GiftCardSerializer(giftcard, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.erros, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         giftcard.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -181,7 +238,7 @@ def cart(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.erros, status=400)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         cart.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
@@ -200,8 +257,8 @@ def cart_items(request):
             cart_item_serializer.save()
             return Response(cart_item_serializer.data, status=status.HTTP_201_CREATED)
         return Response(cart_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    
+
+
 
 # USER REGISTER
 @api_view(['POST'])
@@ -225,4 +282,4 @@ def add_to_cart(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

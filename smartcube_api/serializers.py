@@ -47,7 +47,8 @@ class CartSerializer(serializers.ModelSerializer):
     items = CartItemSerializer(many=True, read_only=True)
     class Meta:
         model = Cart
-        fields = ['id', 'products']
+        fields = '__all__'
+        
 class GiftCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = GiftCard

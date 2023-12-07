@@ -3,8 +3,6 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-
-#USER
 class ShopUser(AbstractUser):
     email = models.EmailField(max_length=100, unique=True)
     
@@ -53,7 +51,7 @@ class Brand(models.Model):
     
 #CART
 class Cart(models.Model):
-    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, default=1)
     created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     # is_ordered = models.BooleanField(default=False)
 
