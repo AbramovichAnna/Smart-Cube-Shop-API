@@ -5,8 +5,6 @@ from django.contrib.auth.models import AbstractUser
 
 #USER
 class ShopUser(AbstractUser):
-    username = models.CharField(max_length=100, unique=True)
-    password = models.CharField(max_length=100)
     email = models.EmailField(max_length=100, unique=True)
     
     def __str__(self):
@@ -54,8 +52,7 @@ class Brand(models.Model):
     
 #CART
 class Cart(models.Model):
-    products = models.ManyToManyField(Product, through='CartItem')
-    ctreate_at = models.DateField(auto_now_add=True)
+    ctreated_at = models.DateField(auto_now_add=True)
     # isPaid = models.BooleanField(default=False)
 
     def __str__(self):
@@ -63,14 +60,13 @@ class Cart(models.Model):
     
 #CARTITEM
 class CartItem(models.Model):
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)
-    
+    quantity = models.PositiveIntegerField(default=1)  # Default quantit
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.user.username} cart item"
-  
+        return f"{self.quantity} x {self.product.name} in Cart ({self.user.username} order = {self.cart})"  
 
 #GIFTCARD
 class GiftCard(models.Model):
