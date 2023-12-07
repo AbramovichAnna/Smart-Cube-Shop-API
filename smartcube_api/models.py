@@ -52,11 +52,12 @@ class Brand(models.Model):
 #CART
 class Cart(models.Model):
     user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, default=1)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     # is_ordered = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.username} cart"
+        return f"{self.user.username} cart created at {self.created_at}"
     
 #CARTITEM
 class CartItem(models.Model):
@@ -65,7 +66,7 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f'{self.quantity} of {self.product.name}'
+        return f'{self.quantity} of {self.product.title}'
 
 #GIFTCARD
 class GiftCard(models.Model):
