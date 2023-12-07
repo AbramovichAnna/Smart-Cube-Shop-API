@@ -276,8 +276,17 @@ def register(request):
 @api_view(['POST'])
 def add_to_cart(request):
     if request.method == 'POST':
-        serializer = CartItemSerializer(data=request.data)
-        product = Product.objects.get(id=request.data['product'])
+        # Parse the incoming data
+        data = JSONParser().parse(request)
+
+        # Check if the product exists
+        try:
+            product = Product.objects.get(id=data['product'])
+        except Product.DoesNotExist:
+            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Create a new CartItem
+        serializer = CartItemSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
