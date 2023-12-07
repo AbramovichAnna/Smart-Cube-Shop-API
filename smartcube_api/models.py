@@ -63,13 +63,14 @@ class Cart(models.Model):
     
 #CARTITEM
 class CartItem(models.Model):
-    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, null=True)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-    cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
-
+    
+    
     def __str__(self):
-        return f"{self.user.username} cart item"    
+        return f"{self.user.username} cart item"
+  
 
 #GIFTCARD
 class GiftCard(models.Model):
