@@ -1,3 +1,4 @@
+from datetime import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -52,21 +53,21 @@ class Brand(models.Model):
     
 #CART
 class Cart(models.Model):
-    ctreated_at = models.DateField(auto_now_add=True)
-    # isPaid = models.BooleanField(default=False)
+    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    # is_ordered = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.user.username} cart"
     
 #CARTITEM
 class CartItem(models.Model):
-    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)  # Default quantit
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     
     def __str__(self):
-        return f"{self.quantity} x {self.product.name} in Cart ({self.user.username} order = {self.cart})"  
+        return f'{self.quantity} of {self.product.name}'
 
 #GIFTCARD
 class GiftCard(models.Model):
