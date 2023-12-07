@@ -250,14 +250,12 @@ def cart_items(request):
         all_cart_items = CartItem.objects.all()
         cart_item_serializer = CartItemSerializer(all_cart_items, many=True)
         return Response(cart_item_serializer.data)
-    
     elif request.method == 'POST':
-        cart_item_serializer = CartItemSerializer(data=request.data)
-        if cart_item_serializer.is_valid():
-            cart_item_serializer.save()
-            return Response(cart_item_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(cart_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+        serializer = CartItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
 
 
 # USER REGISTER
@@ -278,6 +276,7 @@ def register(request):
 def add_to_cart(request):
     if request.method == 'POST':
         serializer = CartItemSerializer(data=request.data)
+        product = Product.objects.get(id=request.data['product'])
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -39,12 +39,12 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class CartItemSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
     class Meta:
         model = CartItem
         fields = '__all__'
         
 class CartSerializer(serializers.ModelSerializer):
-    items = CartItemSerializer(many=True, read_only=True)
     class Meta:
         model = Cart
         fields = '__all__'
