@@ -224,4 +224,5 @@ def add_to_cart(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.erros, status=400)
+        else:
+            return Response(serializer.erros, status=status.HTTP_400_BAD_REQUEST)
