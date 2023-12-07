@@ -190,15 +190,16 @@ def cart(request):
 @api_view(['GET', 'POST'])
 def cart_items(request):
     if request.method == 'GET':
-        cart_items = CartItem.objects.all()
-        serializer = CartItemSerializer(cart_items, many=True)
-        return Response(serializer.data)
+        all_cart_items = CartItem.objects.all()
+        cart_item_serializer = CartItemSerializer(all_cart_items, many=True)
+        return Response(cart_item_serializer.data)
+    
     elif request.method == 'POST':
-        serializer = CartItemSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        cart_item_serializer = CartItemSerializer(data=request.data)
+        if cart_item_serializer.is_valid():
+            cart_item_serializer.save()
+            return Response(cart_item_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(cart_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
 
@@ -218,25 +219,9 @@ def register(request):
 # ADD TO CART
 @api_view(['POST'])
 def add_to_cart(request):
-    # Get the current user
-    user = get_object_or_404(ShopUser, pk=request.user.pk)
-
-    # Get product_id from request data
-    product_id = request.data.get('product_id')
-    product = get_object_or_404(Product, pk=product_id)
-
-    # Get or create the cart for the user
-    cart, created = Cart.objects.get_or_create(user=user)
-
-    # Get or create a cart item for the specified product
-    cart_item, created = CartItem.objects.get_or_create(cart=cart, product=product)
-    if not created:
-        # If the item already exists, increment the quantity
-        cart_item.quantity += 1
-        cart_item.save()
-
-    # Serialize the cart data
-    serializer = CartSerializer(cart)
-
-    # Return the serialized cart data
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    if request.method == 'POST':
+        serializer = CartItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.erros, status=400)

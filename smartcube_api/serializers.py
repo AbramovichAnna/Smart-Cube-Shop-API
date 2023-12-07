@@ -33,20 +33,16 @@ class BrandSerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    category = CategorySerializer()
-    type = TypeSerializer()
-    brand = BrandSerializer()
-
     class Meta:
         model = Product
         fields = '__all__'
 
+
 class CartItemSerializer(serializers.ModelSerializer):
-    product = ProductSerializer(read_only=True)
     class Meta:
         model = CartItem
-        fields = ['id', 'product', 'quantity']
-
+        fields = ['id', 'user', 'product', 'quantity']
+        
 class CartSerializer(serializers.ModelSerializer):
     products = CartItemSerializer(source='cartitem_set', many=True)
     class Meta:
