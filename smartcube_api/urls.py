@@ -20,6 +20,6 @@ urlpatterns = [
     path("giftcards/", views.giftcards, name="giftcards"),
     path("giftcard/<int:pk>", views.giftcard, name="giftcard"),
     path("register/", views.register, name="register"),
-    # path("add_to_cart/<int:pk>", views.add_to_cart, name="add_to_cart"),
+    path("add_to_cart/<int:pk>", views.add_to_cart, name="add_to_cart"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
