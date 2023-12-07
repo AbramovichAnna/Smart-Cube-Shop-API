@@ -251,6 +251,7 @@ def cart_items(request):
         cart_item_serializer = CartItemSerializer(all_cart_items, many=True)
         return Response(cart_item_serializer.data)
     elif request.method == 'POST':
+        
         serializer = CartItemSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
