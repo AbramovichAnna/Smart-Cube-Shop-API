@@ -252,12 +252,16 @@ def cart_items(request):
         return Response(cart_item_serializer.data)
     
     elif request.method == 'POST':
+        # Assuming you have a way to get the current user's cart
+        user_cart, created = Cart.objects.get_or_create(user=request.user) 
+        request.data['cart'] = user_cart.id
         cart_item_serializer = CartItemSerializer(data=request.data)
         if cart_item_serializer.is_valid():
             cart_item_serializer.save()
             return Response(cart_item_serializer.data, status=status.HTTP_201_CREATED)
         return Response(cart_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
+    
 # USER REGISTER
 @api_view(['POST'])
 def register(request):
@@ -271,23 +275,3 @@ def register(request):
         return Response("Method not allowed", status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
     
-# ADD TO CART
-@api_view(['POST'])
-def add_to_cart(request):
-    if request.method == 'POST':
-        # Parse the incoming data
-        data = JSONParser().parse(request)
-
-        # Check if the product exists
-        try:
-            product = Product.objects.get(id=data['product'])
-        except Product.DoesNotExist:
-            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        # Create a new CartItem
-        serializer = CartItemSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

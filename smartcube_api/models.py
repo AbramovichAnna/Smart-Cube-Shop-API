@@ -52,6 +52,7 @@ class Brand(models.Model):
 #CART
 class Cart(models.Model):
     # user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, default=1)
+    
     created_at = models.DateTimeField(auto_now_add=True)
     # is_ordered = models.BooleanField(default=False)
 
@@ -61,7 +62,7 @@ class Cart(models.Model):
 #CARTITEM
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField(default=1)  # Default quantit
+    quantity = models.PositiveIntegerField(default=1) 
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     
     def __str__(self):
