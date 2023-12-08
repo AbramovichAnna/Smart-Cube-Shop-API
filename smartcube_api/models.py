@@ -48,9 +48,11 @@ class Brand(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 #CART
 class Cart(models.Model):
+    cart_id = models.CharField(max_length=100, blank=True,default=1)
     # user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, default=1)
     
     created_at = models.DateTimeField(auto_now_add=True)

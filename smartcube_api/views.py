@@ -252,14 +252,20 @@ def cart_items(request):
         return Response(cart_item_serializer.data)
     
     elif request.method == 'POST':
-        # Assuming you have a way to get the current user's cart
-        user_cart, created = Cart.objects.get_or_create(user=request.user) 
-        request.data['cart'] = user_cart.id
+        cart_id = request.session.get('cart_id')
+        if not cart_id:
+            # Create a new Cart and save its ID in the session
+            new_cart = Cart.objects.create()
+            request.session['cart_id'] = new_cart.id
+            cart_id = new_cart.id
+
+        request.data['cart'] = cart_id
         cart_item_serializer = CartItemSerializer(data=request.data)
         if cart_item_serializer.is_valid():
             cart_item_serializer.save()
             return Response(cart_item_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(cart_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(cart_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
 # USER REGISTER
@@ -274,4 +280,9 @@ def register(request):
     else:
         return Response("Method not allowed", status=status.HTTP_405_METHOD_NOT_ALLOWED)
     
-    
+# HERO PRODUCTS
+@api_view(['GET'])
+def hero_products(request):
+    hero_products = Product.objects.filter(tag='hero-product')
+    serializer = ProductSerializer(hero_products, many=True)
+    return Response(serializer.data)

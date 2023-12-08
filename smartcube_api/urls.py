@@ -19,6 +19,7 @@ urlpatterns = [
     path("cart_items/", views.cart_items, name="cart_item"),
     path("giftcards/", views.giftcards, name="giftcards"),
     path("giftcard/<int:pk>", views.giftcard, name="giftcard"),
+    path('hero-products/', views.hero_products, name='hero_products'),
     path("register/", views.register, name="register"),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
