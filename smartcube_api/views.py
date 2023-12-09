@@ -12,19 +12,19 @@ def index(request):
                             <p>API for a shop application</p>
                             <p>Available endpoints:</p>
                             <ul>
-                                <li>All users : <a href="/users/">/users/</a></li>
-                                <li>All Products : <a href="/products/">/all-products/</a></li>
-                                <li>Single Product : <a href="/product/1">/product/1/</a></li>
-                                <li>All Categories : <a href="/categories/">/all-categories/</a></li>
-                                <li>Single Category : <a href="/category/1">/category/1/</a></li>
-                                <li>All Types : <a href="/types/">/all-types/</a></li>
-                                <li>Single Type : <a href="/type/1">/type/1/</a></li>
-                                <li>All Brands : <a href="/brands/">/all-brands/</a></li>
-                                <li>Single Brand : <a href="/brand/4">/brand/4/</a></li>
-                                <li>All Gigtcards : <a href="/giftcards/">/giftcards/</a></li>
-                                <li>Single Giftcard : <a href="/giftcard/1">/giftcard/1/</a></li>
-                                <li>Cart : <a href="/cart/">/cart/</a></li>
-                                <li>Cart Items : <a href="/cart_items">/cart_items</a></li>
+                                <li>All users :         <a href="/users/">/users/</a></li>
+                                <li>All Products :      <a href="/products/">/products/</a></li>
+                                <li>Single Product :    <a href="/product/1">/product/1/</a></li>
+                                <li>All Categories :    <a href="/categories/">/categories/</a></li>
+                                <li>Single Category :   <a href="/category/1">/category/1/</a></li>
+                                <li>All Types :         <a href="/types/">/types/</a></li>
+                                <li>Single Type :       <a href="/type/1">/type/1/</a></li>
+                                <li>All Brands :        <a href="/brands/">/brands/</a></li>
+                                <li>Single Brand :      <a href="/brand/4">/brand/4/</a></li>
+                                <li>All Gigtcards :     <a href="/giftcards/">/giftcards/</a></li>
+                                <li>Single Giftcard :   <a href="/giftcard/1">/giftcard/1/</a></li>
+                                <li>Cart :              <a href="/cart/">/cart/</a></li>
+                                <li>Cart Items :        <a href="/cart_items">/cart_items</a></li>
                             </ul>
                         """)
 
@@ -119,8 +119,8 @@ def type(request, pk):
 # BRANDS
 @api_view()
 def brands(request):
-    all_brands = BrandSerializer(Brand.objects.all(), many=True).data
-    return Response(all_brands)
+    brands = BrandSerializer(Brand.objects.all(), many=True).data
+    return Response(brands)
 
 # BRAND
 @api_view()
@@ -151,7 +151,6 @@ def category(request, pk):
 
     serializer = CategorySerializer(category)
     return Response(serializer.data)
-
 
 # TYPES
 @api_view()
@@ -244,12 +243,12 @@ def cart(request):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 # CART ITEM
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST','PUT', 'DELETE'])
 def cart_items(request):
     if request.method == 'GET':
         all_cart_items = CartItem.objects.all()
-        cart_item_serializer = CartItemSerializer(all_cart_items, many=True)
-        return Response(cart_item_serializer.data)
+        serializer = CartItemSerializer(all_cart_items, many=True)
+        return Response(serializer.data)
     
     elif request.method == 'POST':
         cart_id = request.session.get('cart_id')
@@ -258,7 +257,6 @@ def cart_items(request):
             new_cart = Cart.objects.create()
             request.session['cart_id'] = new_cart.id
             cart_id = new_cart.id
-
         request.data['cart'] = cart_id
         cart_item_serializer = CartItemSerializer(data=request.data)
         if cart_item_serializer.is_valid():
@@ -266,7 +264,32 @@ def cart_items(request):
             return Response(cart_item_serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(cart_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def update_cart_items(request, pk):
+    try:
+        cart_item = CartItem.objects.get(pk=pk)
+    except CartItem.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
     
+    if request.method == 'GET':
+        serializer = CartItemSerializer(cart_item)
+        return Response(serializer.data)
+    if request.method == 'PUT':
+        cart_item = get_object_or_404(CartItem, pk=pk)
+        quantity = request.data.get('quantity')
+        if quantity == 0:
+            cart_item.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        elif quantity > cart_item.product.inStock:
+            return Response({"error": "Quantity exceeds stock"}, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            cart_item.quantity = quantity
+            cart_item.save()
+            return Response(CartItemSerializer(cart_item).data)
+    elif request.method == 'DELETE':
+        cart_item.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
     
 # USER REGISTER
 @api_view(['POST'])

@@ -20,7 +20,7 @@ class Product(models.Model):
     type = models.ForeignKey('Type', on_delete=models.CASCADE)
     discount = models.DecimalField(max_digits=5, decimal_places=2, default=0)    
     originalPrice = models.DecimalField(max_digits=10, decimal_places=2)
-    inStock = models.PositiveIntegerField(default=2)
+    inStock = models.PositiveIntegerField(default=5)
     ratings = models.DecimalField(max_digits=1, decimal_places=0)
 
     def __str__(self):

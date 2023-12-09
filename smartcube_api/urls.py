@@ -10,17 +10,19 @@ urlpatterns = [
     path("products/", views.products, name="products"),
     path("product/<int:pk>", views.product_details, name="product_details"),
     path("categories/", views.categories, name="categories"),
-    path('category/<int:pk>/', views.category, name='category'),
+    path("category/<int:pk>/", views.category, name="category"),
     path("types/", views.types, name="types"),
     path("type/<int:pk>", views.type, name="type"),
     path("brands/", views.brands, name="brands"),
     path("brand/<int:pk>", views.brand, name="brand"),
     path("cart/", views.cart, name="cart"),
     path("cart_items/", views.cart_items, name="cart_item"),
+    path("update_cart_items/<int:pk>", views.update_cart_items, name="update_cart_item"),
     path("giftcards/", views.giftcards, name="giftcards"),
     path("giftcard/<int:pk>", views.giftcard, name="giftcard"),
-    path('hero-products/', views.hero_products, name='hero_products'),
+    path("hero-products/", views.hero_products, name="hero_products"),
     path("register/", views.register, name="register"),
+
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

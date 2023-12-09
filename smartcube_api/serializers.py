@@ -5,7 +5,6 @@ from .models import ShopUser, Product, Category, Type, Brand, Cart, CartItem, Gi
 
 class ShopUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-
     class Meta:
         model = ShopUser
         fields = ['id', 'username', 'password', 'email']
@@ -26,18 +25,20 @@ class TypeSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BrandSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Brand
-        fields = '__all__'
-
-
 class ProductSerializer(serializers.ModelSerializer):
+    brand=serializers.StringRelatedField()
+    category=serializers.StringRelatedField()
+    type=serializers.StringRelatedField()
+    
     class Meta:
         model = Product
         fields = '__all__'
 
-
+class BrandSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Brand
+        fields = '__all__'
+        
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer(read_only=True)
     product_id = serializers.PrimaryKeyRelatedField(
