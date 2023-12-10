@@ -243,7 +243,7 @@ def cart(request):
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 # CART ITEM
-@api_view(['GET', 'POST','PUT', 'DELETE'])
+@api_view(['GET', 'POST'])
 def cart_items(request):
     if request.method == 'GET':
         all_cart_items = CartItem.objects.all()
@@ -275,21 +275,20 @@ def update_cart_items(request, pk):
     if request.method == 'GET':
         serializer = CartItemSerializer(cart_item)
         return Response(serializer.data)
-    if request.method == 'PUT':
-        cart_item = get_object_or_404(CartItem, pk=pk)
+    elif request.method == 'PUT':
         quantity = request.data.get('quantity')
         if quantity == 0:
             cart_item.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response(CartItemSerializer(CartItem.objects.all(), many=True).data)
         elif quantity > cart_item.product.inStock:
             return Response({"error": "Quantity exceeds stock"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             cart_item.quantity = quantity
             cart_item.save()
-            return Response(CartItemSerializer(cart_item).data)
+            return Response(CartItemSerializer(CartItem.objects.all(), many=True).data)
     elif request.method == 'DELETE':
         cart_item.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(CartItemSerializer(CartItem.objects.all(), many=True).data)
     
 # USER REGISTER
 @api_view(['POST'])
