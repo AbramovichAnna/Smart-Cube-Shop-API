@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+# from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from .models import ShopUser, Product, Category, CartItem, Brand, Type, GiftCard, Cart
 from rest_framework.decorators import api_view
@@ -41,7 +41,19 @@ def users(request):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors)
-
+    
+# USER REGISTER
+@api_view(['POST'])
+def register(request):
+    if request.method == 'POST':
+        serializer = ShopUserSerializer(data=request.data)
+        print(serializer)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        return Response("Method not allowed", status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 # PRODUCTS
 @api_view(['GET', 'POST'])
@@ -63,7 +75,6 @@ def products(request):
             return Response(serializer.data, status=201)
         return Response(serializer.errors, status=400)
     
-
 # PRODUCT DETAILS
 @api_view(['GET', 'PUT', 'DELETE'])
 def product_details(request, pk):
@@ -71,11 +82,9 @@ def product_details(request, pk):
         product = Product.objects.get(pk=pk)
     except Product.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
     if request.method == 'GET':
         serializer = ProductSerializer(product)
         return Response(serializer.data)
-    
     elif request.method == 'PUT':
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
@@ -104,7 +113,6 @@ def category(request, pk):
     serializer = CategorySerializer(category)
     return Response(serializer.data)
 
-
 # TYPES
 @api_view()
 def types(request):
@@ -130,62 +138,6 @@ def type(request, pk):
 def brands(request):
     brands = BrandSerializer(Brand.objects.all(), many=True).data
     return Response(brands)
-
-# BRAND
-@api_view()
-def brand(request, pk):
-    try:
-        brand = Brand.objects.get(pk=pk)
-    except Brand.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    if request.method == 'GET':
-        serializer = BrandSerializer(brand)
-        return Response(serializer.data)
-
-# CATEGORIES
-@api_view()
-def categories(request):
-    all_categories = CategorySerializer(Category.objects.all(), many=True).data
-    return Response(all_categories)
-
-    
-# CATEGORY
-@api_view(['GET'])
-def category(request, pk):
-    try:
-        category = Category.objects.get(pk=pk)
-    except Category.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-
-    serializer = CategorySerializer(category)
-    return Response(serializer.data)
-
-# TYPES
-@api_view()
-def types(request):
-    if request.method == 'GET':
-        types = Type.objects.all()
-        serializer = TypeSerializer(types, many=True)
-        return Response(serializer.data)
-    
-# TYPE
-@api_view()
-def type(request, pk):
-    try:
-        type = Type.objects.get(pk=pk)
-    except Type.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    if request.method == 'GET':
-        serializer = TypeSerializer(type)
-        return Response(serializer.data)
-
-# BRANDS
-@api_view()
-def brands(request):
-    all_brands = BrandSerializer(Brand.objects.all(), many=True).data
-    return Response(all_brands)
 
 # BRAND
 @api_view()
@@ -260,13 +212,7 @@ def cart_items(request):
         return Response(serializer.data)
     
     elif request.method == 'POST':
-        cart_id = request.session.get('cart_id')
-        if not cart_id:
-            # Create a new Cart and save its ID in the session
-            new_cart = Cart.objects.create()
-            request.session['cart_id'] = new_cart.id
-            cart_id = new_cart.id
-        request.data['cart'] = cart_id
+        # cart_id = request.session.get('cart_id')
         cart_item_serializer = CartItemSerializer(data=request.data)
         if cart_item_serializer.is_valid():
             cart_item_serializer.save()
@@ -274,13 +220,13 @@ def cart_items(request):
         else:
             return Response(cart_item_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# UPDATE CART ITEM
 @api_view(['GET', 'PUT', 'DELETE'])
 def update_cart_items(request, pk):
     try:
         cart_item = CartItem.objects.get(pk=pk)
     except CartItem.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
     if request.method == 'GET':
         serializer = CartItemSerializer(cart_item)
         return Response(serializer.data)
@@ -298,23 +244,3 @@ def update_cart_items(request, pk):
     elif request.method == 'DELETE':
         cart_item.delete()
         return Response(CartItemSerializer(CartItem.objects.all(), many=True).data)
-    
-# USER REGISTER
-@api_view(['POST'])
-def register(request):
-    if request.method == 'POST':
-        serializer = ShopUserSerializer(data=request.data)
-        print(serializer)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    else:
-        return Response("Method not allowed", status=status.HTTP_405_METHOD_NOT_ALLOWED)
-    
-# HERO PRODUCTS
-@api_view(['GET'])
-def hero_products(request):
-    hero_products = Product.objects.filter(tag='hero-product')
-    serializer = ProductSerializer(hero_products, many=True)
-    return Response(serializer.data)

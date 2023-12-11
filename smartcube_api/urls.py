@@ -20,7 +20,6 @@ urlpatterns = [
     path("update_cart_items/<int:pk>", views.update_cart_items, name="update_cart_item"),
     path("giftcards/", views.giftcards, name="giftcards"),
     path("giftcard/<int:pk>", views.giftcard, name="giftcard"),
-    path("hero-products/", views.hero_products, name="hero_products"),
     path("register/", views.register, name="register"),
 
 

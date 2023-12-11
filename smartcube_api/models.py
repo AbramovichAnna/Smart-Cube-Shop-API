@@ -1,15 +1,15 @@
-from datetime import timezone
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
+# USER
 class ShopUser(AbstractUser):
     email = models.EmailField(max_length=100, unique=True)
     
     def __str__(self):
         return self.username
 
-#PRODUCT
+# PRODUCT
 class Product(models.Model):
     title = models.CharField(max_length=100)
     tag = models.CharField(max_length=100, blank=True)
@@ -26,7 +26,7 @@ class Product(models.Model):
     def __str__(self):
         return self.title
     
-#CATEGORIES
+# CATEGORIES
 class Category(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='categories_images/')
@@ -34,14 +34,14 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
-#TYPE
+# TYPE
 class Type(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
-#BRAND
+# BRAND
 class Brand(models.Model):
     name = models.CharField(max_length=100)
     image = models.ImageField(upload_to='brands_images/')
@@ -49,18 +49,15 @@ class Brand(models.Model):
     def __str__(self):
         return self.name
 
-
-#CART
+# CART
 class Cart(models.Model):
-    cart_id = models.CharField(max_length=100, blank=True,default=1)
-    user = models.ForeignKey(ShopUser, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    # is_ordered = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.user.username} cart created at {self.created_at}"
+        return self.cart_id
     
-#CARTITEM
+# CARTITEM
 class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1) 
@@ -69,7 +66,7 @@ class CartItem(models.Model):
     def __str__(self):
         return f'{self.quantity} of {self.product.title}'
 
-#GIFTCARD
+# GIFTCARD
 class GiftCard(models.Model):
     description = models.TextField()
     value = models.DecimalField(max_digits=10, decimal_places=2)
