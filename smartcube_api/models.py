@@ -53,8 +53,7 @@ class Brand(models.Model):
 #CART
 class Cart(models.Model):
     cart_id = models.CharField(max_length=100, blank=True,default=1)
-    # user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, default=1)
-    
+    user = models.ForeignKey(ShopUser, on_delete=models.SET_NULL, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # is_ordered = models.BooleanField(default=False)
 

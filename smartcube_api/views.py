@@ -29,10 +29,19 @@ def index(request):
                         """)
 
 #USERS
-@api_view()
+@api_view(['GET', 'POST'])
 def users(request):
-    all_users = ShopUserSerializer(ShopUser.objects.all(), many=True).data
-    return Response(all_users)
+    if request.method == 'GET':
+        users = ShopUser.objects.all()
+        serializer = ShopUserSerializer(users, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = ShopUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors)
+
 
 # PRODUCTS
 @api_view(['GET', 'POST'])
@@ -295,6 +304,7 @@ def update_cart_items(request, pk):
 def register(request):
     if request.method == 'POST':
         serializer = ShopUserSerializer(data=request.data)
+        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
