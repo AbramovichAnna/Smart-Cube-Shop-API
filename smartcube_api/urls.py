@@ -21,6 +21,8 @@ urlpatterns = [
     path("giftcards/", views.giftcards, name="giftcards"),
     path("giftcard/<int:pk>", views.giftcard, name="giftcard"),
     path("register/", views.register, name="register"),
+    # path("get_user/<int:pk>", views.get_user, name="get_user"),
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

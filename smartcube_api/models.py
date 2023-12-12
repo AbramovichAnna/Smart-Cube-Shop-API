@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
-
 # USER
 class ShopUser(AbstractUser):
     email = models.EmailField(max_length=100, unique=True)
@@ -51,11 +50,12 @@ class Brand(models.Model):
 
 # CART
 class Cart(models.Model):
-    user = models.ForeignKey(ShopUser, on_delete=models.CASCADE, null=True, blank=True)
+    user = models.ForeignKey(ShopUser, on_delete=models.SET_NULL, null=True, blank=True)
+    cart_id = models.CharField(max_length=100, blank=True,default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.cart_id
+        return f"{self.cart_id} cart created at {self.created_at}"
     
 # CARTITEM
 class CartItem(models.Model):

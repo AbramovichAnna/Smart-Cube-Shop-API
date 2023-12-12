@@ -12,7 +12,8 @@ class ShopUserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = ShopUser.objects.create_user(**validated_data)
         return user
-
+    
+    
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category

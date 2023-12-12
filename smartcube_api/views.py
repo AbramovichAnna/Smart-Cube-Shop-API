@@ -212,7 +212,13 @@ def cart_items(request):
         return Response(serializer.data)
     
     elif request.method == 'POST':
-        # cart_id = request.session.get('cart_id')
+        cart_id = request.session.get('cart_id')
+        if not cart_id:
+            # Create a new Cart and save its ID in the session
+            new_cart = Cart.objects.create()
+            request.session['cart_id'] = new_cart.id
+            cart_id = new_cart.id
+        request.data['cart'] = cart_id
         cart_item_serializer = CartItemSerializer(data=request.data)
         if cart_item_serializer.is_valid():
             cart_item_serializer.save()
@@ -227,6 +233,7 @@ def update_cart_items(request, pk):
         cart_item = CartItem.objects.get(pk=pk)
     except CartItem.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+    
     if request.method == 'GET':
         serializer = CartItemSerializer(cart_item)
         return Response(serializer.data)
