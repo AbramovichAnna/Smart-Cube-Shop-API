@@ -50,7 +50,6 @@ class Brand(models.Model):
 
 # CART
 class Cart(models.Model):
-    user = models.ForeignKey(ShopUser, on_delete=models.SET_NULL, null=True, blank=True)
     cart_id = models.CharField(max_length=100, blank=True,default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
